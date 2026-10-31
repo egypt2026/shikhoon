@@ -133,8 +133,8 @@ const m=`*طلب جديد - شيخون فوودز*\nالاسم: ${n}\n`+(a?`ال
 const u='https://wa.me/'+WA+'?text='+encodeURIComponent(m);window.open(u,'_blank')||(location.href=u)}
 draw();
 // للتحديث التلقائي: انشر شيت Google Sheets بصيغة CSV وضع الرابط هنا (يعمل عند استضافة الصفحة على موقعك مثل GitHub Pages)
-const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRaB50wv9Sac6SGKJxCe4VV-hwPw1Mu5rHxBsANdmiAnkpDO8OBhgl0CsWAhNnciGGkGK4tRv5rXbr5/pub?gid=560607079&single=true&output=csv';
-const toNum=x=>+String(x||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d.]/g,'')||0;
+const CSV_URL='';
+const toNum=x=>{let s=String(x||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/٫/g,'.').replace(/[^\d.,]/g,'').replace(/[.,]+$/,'');const c=s.lastIndexOf(','),d=s.lastIndexOf('.');if(c>-1&&d>-1)s=c>d?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'');else if(c>-1)s=/,\d{1,2}$/.test(s)?s.replace(',','.'):s.replace(/,/g,'');return parseFloat(s.replace(/[^\d.]/g,''))||0};
 function csv(t){const R=[];let r=[],c='',q=0;for(let i=0;i<t.length;i++){const h=t[i];if(q){if(h=='"'){if(t[i+1]=='"'){c+='"';i++}else q=0}else c+=h}else if(h=='"')q=1;else if(h==','){r.push(c);c=''}else if(h=='\n'||h=='\r'){if(h=='\r'&&t[i+1]=='\n')i++;r.push(c);c='';R.push(r);r=[]}else c+=h}if(c||r.length){r.push(c);R.push(r)}return R}
 async function sync(){if(!CSV_URL)return;try{const r=await fetch(CSV_URL+(CSV_URL.includes('?')?'&':'?')+'t='+Date.now());const R=csv(await r.text()).slice(1).filter(x=>x[1]&&toNum(x[2])>0);const ns=S.map(s=>[]),nI=[];
 R.forEach(x=>{const k=S.findIndex(s=>s.t.replace('قسم ','')===x[0].trim());if(k<0)return;let p=toNum(x[2]),o=toNum(x[3]);if(G>0&&!o){o=p;p=+(p*(1-G/100)).toFixed(2)}const i={id:nI.length,n:x[1].trim(),p,o:o>p?o:0};nI.push(i);ns[k].push(i)});
